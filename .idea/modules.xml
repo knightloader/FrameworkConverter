@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/FrameworkConvert/FrameworkConvert.iml" filepath="$PROJECT_DIR$/FrameworkConvert/FrameworkConvert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/FrameworkConverter.iml" filepath="$PROJECT_DIR$/.idea/FrameworkConverter.iml" />
+    </modules>
+  </component>
+</project>
