@@ -1,5 +1,5 @@
 # FrameworkConverter
-project converting Loadrunner correlation rules into NeoLoad framework rule
+project converting LoadRunner correlation rules into NeoLoad framework rule
 
 
 #  How to use the Framework Converter 
