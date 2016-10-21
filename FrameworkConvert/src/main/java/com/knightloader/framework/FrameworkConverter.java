@@ -8,7 +8,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.ParseException;
 
 import java.io.*;
-import java.util.Properties;
+import java.util.regex.Pattern;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -151,7 +151,7 @@ public class FrameworkConverter
                             Frameworkrule.setAttribute("template", "$1$");
                         //    Frameworkrule.appendChild(tempelement);
                             Element Injector =NLdoc.createElement("dp-request-injector");
-                            Injector.setAttribute("injectionMethod","PART_OF_THE_VALUE");
+                            Injector.setAttribute("injectionMethod","WHOLE_VALUE");
                             Injector.setAttribute("type","PARAMETER_VALUE");
                             Frameworkrule.appendChild(Injector);
                             rootelement.appendChild(Frameworkrule);
@@ -192,31 +192,25 @@ public class FrameworkConverter
     }
     private static String EscapeRegexpCharacter( String boudary)
     {
-            boudary=boudary.replaceAll("\\}","\\\\}");
-            boudary=boudary.replaceAll("\\{","\\\\{");
-            boudary=boudary.replaceAll("\\[","\\\\[");
-            boudary=boudary.replaceAll("\\]","\\\\]");
-            boudary=boudary.replaceAll("\\?","\\\\?");
-            boudary=boudary.replaceAll("\\.","\\\\.");
-            boudary=boudary.replaceAll("\\^","\\\\^");
-            boudary=boudary.replaceAll("\\.","\\\\.");
-            boudary=boudary.replaceAll("\\*","\\\\*");
-            boudary=boudary.replaceAll("\\+","\\\\+");
-            return boudary;
+        Pattern SPECIAL_REGEX_CHARS = Pattern.compile("[{}()\\[\\].+*?^$\\\\|]");
+        boudary=SPECIAL_REGEX_CHARS.matcher(boudary).replaceAll("\\\\$0");
+
+        return boudary;
 
     }
     private static String getNLRegexp(String LRFlag,String LRleft,String LRright)
     {
+           String reg;
            String NLregexp = null;
             switch (LRFlag) {
                 case SEARCH_CASE_SENSITIVE:
-                    NLregexp = EscapeRegexpCharacter(LRleft) + "(.?*)" + EscapeRegexpCharacter(LRright);
+                    NLregexp = EscapeRegexpCharacter(LRleft) + GenerateRegexp(LRright) + EscapeRegexpCharacter(LRright);
                     break;
                 case SEARCH_CASE_NONSENSITIVE:
-                    NLregexp = EscapeRegexpCharacter(LRleft) + "(.?*)" + EscapeRegexpCharacter(LRright);
+                    NLregexp = EscapeRegexpCharacter(LRleft) + GenerateRegexp(LRright) + EscapeRegexpCharacter(LRright);
                     break;
                 case SEARCH_DIGIT_REPLACEMENT:
-                    NLregexp = LRleft.replaceAll("#", "\\\\d{1}" )+ "(.?*)" + LRright.replaceAll("#", "\\\\d{1}");
+                    NLregexp = LRleft.replaceAll("#", "\\\\d{1}" )+ GenerateRegexp(LRright) + LRright.replaceAll("#", "\\\\d{1}");
                     break;
                 case SEARCH_REGEX:
                     NLregexp = LRleft;
@@ -224,6 +218,13 @@ public class FrameworkConverter
             }
 
         return NLregexp;
+    }
+    private static String GenerateRegexp(String rightBoundary)
+    {
+        String firstcharacter=rightBoundary.substring(0,1);
+
+        return "([^"+EscapeRegexpCharacter(firstcharacter)+"]+)";
+
     }
     private static boolean CreateFrameworkFile(String NL_FRAMEWORK_FILE)
     {

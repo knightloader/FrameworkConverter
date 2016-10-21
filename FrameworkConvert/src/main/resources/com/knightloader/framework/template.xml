@@ -112,7 +112,7 @@
 <framework isReadOnly="false" name="WebTop" signature="" state="SELECTED" uniqueID="0" version="5.2.0">
 <dynamic-parameters>
 <dynamic-parameter extractionMethod="REGEXP_ONLY" extractionSource="BODY" name="dmfRequestId" regexp="type='hidden' name='__dmfRequestId' value='(.*?)'" template="$1$">
-<dp-request-injector injectionMethod="PART_OF_THE_VALUE" type="PARAMETER_VALUE"/>
+<dp-request-injector injectionMethod="WHOLE_VALUE" type="PARAMETER_VALUE"/>
 </dynamic-parameter>
 
 </dynamic-parameters>
